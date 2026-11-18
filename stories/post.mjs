@@ -30,7 +30,8 @@ if (!s) { console.log(`枠「${slot}」はありません`); process.exit(1); }
 console.log(`■ ${s.名前}（営業日 ${bizDate}・予定 ${s.時刻}・今 ${fmt(now)}・${DRY ? "下見" : "本番"}）`);
 
 const log = fs.existsSync(LOG) ? fs.readFileSync(LOG, "utf8") : "営業日,枠,日時(JST),結果,詳細\n";
-const record = (result, detail) => { if (!DRY) fs.writeFileSync(LOG, log + `${bizDate},${slot},${fmt(jstNow())},${result},${String(detail).replace(/[,\n]/g, " ")}\n`); };
+let img = null;
+const record = (result, detail) => { if (!DRY) fs.writeFileSync(LOG, log + `${bizDate},${slot},${fmt(jstNow())},${result},${String(detail).replace(/[,\n]/g, " ")}${typeof img === "string" ? " " + img : ""}\n`); };
 const stop = (msg) => { console.log("→ " + msg + "。投稿しません。"); process.exit(0); };
 
 if (!FORCE) {
@@ -43,7 +44,14 @@ if (!FORCE) {
 if (!s.承認 && !DRY) stop("まだ承認されていない枠（schedule.json の承認が false）");
 if (!s.承認) console.log("  ※まだ承認されていない枠です（本番では出しません）。下見なのでチェックだけ続けます");
 
-const url = `https://raw.githubusercontent.com/${repo}/main/${s.画像}`;
+// 画像が配列なら日替わり：基準日からの営業日（月〜土）の数で順番に回す。全部出し切るまで同じ絵柄は出ない
+img = s.画像;
+if (Array.isArray(img)) {
+  let n = 0; for (let t = Date.parse((cfg.基準日 || "2026-11-16") + "T00:00:00Z"); t < Date.parse(bizDate + "T00:00:00Z"); t += 864e5) if (new Date(t).getUTCDay() !== 0) n++;
+  img = img[((n % img.length) + img.length) % img.length];
+  console.log(`  日替わり：${s.画像.length}枚中 ${s.画像.indexOf(img) + 1}枚目`);
+}
+const url = `https://raw.githubusercontent.com/${repo}/main/${img}`;
 const head = await fetch(url, { method: "HEAD" });
 if (!head.ok) { console.log(`✖ 画像が見えません：${url}（${head.status}）`); process.exit(1); }
 console.log(`  画像：${url}`);
