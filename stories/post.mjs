@@ -40,13 +40,19 @@ if (!FORCE) {
   const late = (now - target(s.時刻)) / 60e3;
   if (late > cfg.遅れの上限分) { record("見送り", `${Math.round(late)}分遅れ`); stop(`${Math.round(late)}分遅れている`); }
 }
-if (!s.承認) stop("まだ承認されていない枠（schedule.json の承認が false）");
+if (!s.承認 && !DRY) stop("まだ承認されていない枠（schedule.json の承認が false）");
+if (!s.承認) console.log("  ※まだ承認されていない枠です（本番では出しません）。下見なのでチェックだけ続けます");
 
 const url = `https://raw.githubusercontent.com/${repo}/main/${s.画像}`;
 const head = await fetch(url, { method: "HEAD" });
 if (!head.ok) { console.log(`✖ 画像が見えません：${url}（${head.status}）`); process.exit(1); }
 console.log(`  画像：${url}`);
-if (DRY) stop("下見モード（チェックはすべてOK）");
+if (DRY) {
+  const me = await (await fetch(`${api}/${process.env.IG_USER_ID}?fields=username&access_token=${process.env.IG_ACCESS_TOKEN}`)).json();
+  if (me.error) { console.log(`✖ Instagramの鍵が使えません：${me.error.message}`); process.exit(1); }
+  console.log(`  Instagram：@${me.username} に接続OK`);
+  stop("下見モード（チェックはすべてOK）");
+}
 
 // 予定より早く起きたときは、予定時刻まで待つ（最大20分）
 const early = target(s.時刻) - jstNow();
