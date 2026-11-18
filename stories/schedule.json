@@ -3,8 +3,8 @@
   "休み": [],
   "遅れの上限分": 60,
   "枠": {
-    "open":    { "名前": "①オープン告知",     "時刻": "19:00", "画像": "stories/S1_open.jpg",    "承認": false },
-    "late":    { "名前": "②まだ注文できる",   "時刻": "24:30", "画像": "stories/S2_late.jpg",    "承認": false },
-    "shijimi": { "名前": "③〆のしじみ汁",     "時刻": "27:00", "画像": "stories/S3_shijimi.jpg", "承認": false }
+    "open":    { "名前": "①オープン告知",     "時刻": "19:00", "画像": "stories/S1_open.jpg",    "承認": true },
+    "late":    { "名前": "②まだ注文できる",   "時刻": "24:30", "画像": "stories/S2_late.jpg",    "承認": true },
+    "shijimi": { "名前": "③〆のしじみ汁",     "時刻": "27:00", "画像": "stories/S3_shijimi.jpg", "承認": true }
   }
 }
