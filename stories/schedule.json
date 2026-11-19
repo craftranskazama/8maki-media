@@ -1,10 +1,65 @@
 {
-  "説明": "夜のストーリーの自動投稿設定。承認がtrueの枠だけ投稿する。休みは営業日の日付（例 2026-12-31）。日曜は定休なので自動で出さない。",
-  "休み": [],
-  "遅れの上限分": 60,
-  "枠": {
-    "open":    { "名前": "①オープン告知",     "時刻": "19:00", "画像": "stories/S1_open.jpg",    "承認": true },
-    "late":    { "名前": "②まだ注文できる",   "時刻": "24:30", "画像": "stories/S2_late.jpg",    "承認": true },
-    "shijimi": { "名前": "③〆のしじみ汁",     "時刻": "27:00", "画像": "stories/S3_shijimi.jpg", "承認": true }
+ "説明": "夜のストーリーの自動投稿設定。承認がtrueの枠だけ投稿する。画像が配列のときは基準日からの営業日（月〜土）ごとに順番に日替わり。休みは営業日の日付（例 2026-12-31）。日曜は定休なので自動で出さない。",
+ "休み": [],
+ "遅れの上限分": 60,
+ "枠": {
+  "open": {
+   "名前": "①オープン告知",
+   "時刻": "19:00",
+   "画像": [
+    "stories/open/open_01.jpg",
+    "stories/open/open_02.jpg",
+    "stories/open/open_03.jpg",
+    "stories/open/open_04.jpg",
+    "stories/open/open_05.jpg",
+    "stories/open/open_06.jpg",
+    "stories/open/open_07.jpg",
+    "stories/open/open_08.jpg",
+    "stories/open/open_09.jpg",
+    "stories/open/open_10.jpg",
+    "stories/open/open_11.jpg",
+    "stories/open/open_12.jpg"
+   ],
+   "承認": true
+  },
+  "late": {
+   "名前": "②まだ注文できる",
+   "時刻": "24:30",
+   "画像": [
+    "stories/late/late_01.jpg",
+    "stories/late/late_02.jpg",
+    "stories/late/late_03.jpg",
+    "stories/late/late_04.jpg",
+    "stories/late/late_05.jpg",
+    "stories/late/late_06.jpg",
+    "stories/late/late_07.jpg",
+    "stories/late/late_08.jpg",
+    "stories/late/late_09.jpg",
+    "stories/late/late_10.jpg",
+    "stories/late/late_11.jpg",
+    "stories/late/late_12.jpg"
+   ],
+   "承認": true
+  },
+  "shijimi": {
+   "名前": "③〆のしじみ汁",
+   "時刻": "27:00",
+   "画像": [
+    "stories/shijimi/shijimi_01.jpg",
+    "stories/shijimi/shijimi_02.jpg",
+    "stories/shijimi/shijimi_03.jpg",
+    "stories/shijimi/shijimi_04.jpg",
+    "stories/shijimi/shijimi_05.jpg",
+    "stories/shijimi/shijimi_06.jpg",
+    "stories/shijimi/shijimi_07.jpg",
+    "stories/shijimi/shijimi_08.jpg",
+    "stories/shijimi/shijimi_09.jpg",
+    "stories/shijimi/shijimi_10.jpg",
+    "stories/shijimi/shijimi_11.jpg",
+    "stories/shijimi/shijimi_12.jpg"
+   ],
+   "承認": true
   }
+ },
+ "基準日": "2026-11-19"
 }
