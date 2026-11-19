@@ -1,12 +1,16 @@
 # 8maki 夜のストーリー自動投稿（時刻はUTC。日本時間 = UTC+9）
 #   ①19:00 → UTC 10:00 ／ ②24:30 → UTC 15:30 ／ ③27:00(翌3:00) → UTC 18:00
-#   混雑で遅れやすいので数分早めに起動し、スクリプトが予定時刻まで待つ。月〜土の営業日だけ（UTCの曜日＝営業日の曜日）。
+#   GitHubの定時実行は30〜50分遅れることがあるので、各枠40分前と20分前の2回起動し、スクリプトが予定時刻まで待つ。
+#   2回目は記録を見て「投稿済み」なら何もしない。月〜土の営業日だけ（UTCの曜日＝営業日の曜日）。
 name: stories
 on:
   schedule:
-    - cron: "52 9 * * 1-6"
-    - cron: "22 15 * * 1-6"
-    - cron: "52 17 * * 1-6"
+    - cron: "20 9 * * 1-6"
+    - cron: "40 9 * * 1-6"
+    - cron: "50 14 * * 1-6"
+    - cron: "10 15 * * 1-6"
+    - cron: "20 17 * * 1-6"
+    - cron: "40 17 * * 1-6"
   workflow_dispatch:
     inputs:
       slot:
@@ -30,7 +34,7 @@ concurrency:
 jobs:
   post:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
