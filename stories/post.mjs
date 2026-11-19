@@ -22,7 +22,7 @@ const fmt = (d) => d.toISOString().slice(0, 16).replace("T", " ");
 
 let slot = want;
 if (slot === "auto") {
-  slot = Object.keys(cfg.枠).find((k) => { const diff = (now - target(cfg.枠[k].時刻)) / 60e3; return diff >= -20 && diff <= cfg.遅れの上限分; });
+  slot = Object.keys(cfg.枠).find((k) => { const diff = (now - target(cfg.枠[k].時刻)) / 60e3; return diff >= -45 && diff <= cfg.遅れの上限分; });
   if (!slot) { console.log(`今（${fmt(now)}）はどの枠の時間でもありません。何もしません。`); process.exit(0); }
 }
 const s = cfg.枠[slot];
@@ -62,7 +62,7 @@ if (DRY) {
   stop("下見モード（チェックはすべてOK）");
 }
 
-// 予定より早く起きたときは、予定時刻まで待つ（最大20分）
+// 予定より早く起きたときは、予定時刻まで待つ（最大45分）
 const early = target(s.時刻) - jstNow();
 if (early > 0 && !FORCE) { console.log(`  予定時刻まで ${Math.round(early / 1000)}秒待ちます`); await sleep(early); }
 
