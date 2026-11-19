@@ -1,0 +1,53 @@
+# 8maki 通常投稿（月・水・金 18:00 JST = UTC 9:00）
+#   GitHubの定時実行は遅れることがあるので、40分前と20分前の2回起動し、スクリプトが18:00まで待つ。2回目は投稿済みなら何もしない。
+name: feed
+on:
+  schedule:
+    - cron: "20 8 * * 1,3,5"
+    - cron: "40 8 * * 1,3,5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "下見だけ（投稿しない）"
+        type: boolean
+        default: true
+      force:
+        description: "時刻のチェックを無視（テスト用）"
+        type: boolean
+        default: false
+      date:
+        description: "日付を指定（テスト用・空なら今日）"
+        type: string
+        default: ""
+permissions:
+  contents: write
+concurrency:
+  group: feed
+  cancel-in-progress: false
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 投稿
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || inputs.dry_run }}
+          FORCE: ${{ inputs.force || 'false' }}
+          DATE: ${{ inputs.date }}
+        run: node feed/post.mjs
+      - name: 記録を保存
+        if: always()
+        run: |
+          git config user.name "8maki-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if [ -n "$(git status --porcelain feed/log.csv)" ]; then
+            git add feed/log.csv
+            git commit -m "feed log"
+            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          fi
