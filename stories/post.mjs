@@ -37,6 +37,7 @@ const stop = (msg) => { console.log("→ " + msg + "。投稿しません。"); 
 if (!FORCE) {
   if (bizDow === 0) stop("日曜は定休日");
   if (cfg.休み.includes(bizDate)) stop(`${bizDate} は休みに入っています`);
+  if ((cfg.手動 || []).some((m) => m.日付 === bizDate && m.枠 === slot)) stop(`${bizDate} のこの枠は手動（Business Suiteの予約など）で出すことになっています`);
   if (log.split("\n").some((l) => l.startsWith(`${bizDate},${slot},`) && l.includes(",OK,"))) stop("この枠は今日もう投稿済み");
   const late = (now - target(s.時刻)) / 60e3;
   if (late > cfg.遅れの上限分) { record("見送り", `${Math.round(late)}分遅れ`); stop(`${Math.round(late)}分遅れている`); }
